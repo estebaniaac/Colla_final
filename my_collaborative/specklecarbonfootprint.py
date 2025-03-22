@@ -59,12 +59,16 @@ def extract_data(obj, parent_family=None):
         volume = getattr(obj, "volume", None)
         material_name = "Unknown Material"
 
-        # If name is still missing, try extracting from parameters
+        # Convert parameters if it's a Base object
         parameters = getattr(obj, "parameters", {})
+        if isinstance(parameters, Base):
+            parameters = parameters.__dict__  # Convert Base object to dictionary
+
+        # If name is missing, try extracting from parameters
         if obj_name is None and isinstance(parameters, dict):
             for key, value in parameters.items():
                 if "name" in key.lower():
-                    obj_name = value.get("value", "Unnamed Object")
+                    obj_name = getattr(value, "value", "Unnamed Object")  # Fix applied
         
         # If still missing, use family as last resort
         if obj_name is None:
@@ -74,13 +78,13 @@ def extract_data(obj, parent_family=None):
         if isinstance(parameters, dict):
             for key, value in parameters.items():
                 if "material" in key.lower():
-                    material_name = value.get("value", "Unknown Material")
+                    material_name = getattr(value, "value", "Unknown Material")  # Fix applied
         
         # If family is missing, check parameters
         if not family:
             for key, value in parameters.items():
                 if "family" in key.lower():
-                    family = value.get("value", "Unknown Family")
+                    family = getattr(value, "value", "Unknown Family")  # Fix applied
 
         # Special case: Adaptive families (extract from materialQuantities)
         material_quantities = getattr(obj, "materialQuantities", None)
@@ -146,16 +150,11 @@ if hasattr(objData, "elements"):
     for element in objData.elements:
         extract_data(element)
 
-# Convert extracted data to DataFrame and save to CSV
-df = pd.DataFrame(elements_data)
+# Now, elements_data is ready to be used directly in speckle_epd_carbon
+print("✅ Extracted materials and volumes are ready for EPD processing!")
 
-# Ensure there are no duplicate IDs in the final dataset
-df = df.drop_duplicates(subset=["ID"])
-
-csv_path = "carbon_footprint_data_no_duplicates.csv"
-df.to_csv(csv_path, index=False)
-print(f"✅ Data extracted and saved to: {csv_path}")
-
-# Print a sample of the extracted data
-print("\n✅ **Extracted Data Sample:**")
-print(df.head())
+# # Print extracted materials
+# extracted_materials = sorted(set([item['Material'] for item in elements_data]))
+# print("📦 Extracted Materials:")
+# for material in extracted_materials:
+#     print(f" - {material}")

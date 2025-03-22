@@ -3,17 +3,11 @@ import pandas as pd
 from shared import get_full_epd
 
 def get_epd_by_id(uuid: str):
-    """Fetches the data of a specific EPD given its UUID and saves it to a JSON file."""
-    data = get_full_epd(uuid)
+    """Fetches the data of a specific EPD given its UUID and returns it as JSON (no file saving)."""
+    data = get_full_epd(uuid)  # Fetch EPD data
 
-    # Save JSON data to a file
-    json_file = f"epd_{uuid}.json"
-    with open(json_file, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
+    return data  # ✅ Only return JSON, do NOT save it here
 
-    print(f"EPD data has been saved to {json_file}")
-
-    return json_file  # Return the filename for further processing
 
 def convert_json_to_excel(json_file):
     """Converts a saved JSON file to an Excel file."""
