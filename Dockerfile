@@ -8,4 +8,4 @@ COPY . .
 RUN pip install -r requirements.txt
 
 # Default command 
-CMD ["python", "send_to_speckle.py"]
+CMD ["python", "my_collaborative/send_to_speckle.py"]
