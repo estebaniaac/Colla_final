@@ -1,6 +1,3 @@
-import os
-import json
-import re
 import pandas as pd
 import subprocess
 from specklepy.api.client import SpeckleClient
