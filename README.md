@@ -1,7 +1,3 @@
-Perfect! Here's an updated `README.md` including the **collaborative BIM** academic context from IAAC:
-
----
-
 # ♻️ Speckle Carbon Matcher
 
 A Python-based app that extracts material volumes from Revit models via Speckle, matches them to **Oekobaudat EPDs**, and computes the **total embodied carbon footprint**. The results are pushed back to Speckle for direct BIM integration and visualization.
